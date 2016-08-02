@@ -1,0 +1,6 @@
+name: AthenaRank
+main: io.github.redwallhp.athenarank.AthenaRank
+description: Athena player rankings tracker
+author: redwall_hp
+version: ${project.version}
+depend: [AthenaGM]
