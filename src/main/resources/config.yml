@@ -3,3 +3,13 @@ database:
   username: archer
   password: guest
 
+leaderboard:
+  enabled: false
+  heads:
+  - "0,0,0"
+  - "0,0,0"
+  - "0,0,0"
+  signs:
+  - "0,0,0"
+  - "0,0,0"
+  - "0,0,0"
