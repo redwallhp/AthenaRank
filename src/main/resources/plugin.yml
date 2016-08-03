@@ -4,3 +4,19 @@ description: Athena player rankings tracker
 author: redwall_hp
 version: ${project.version}
 depend: [AthenaGM]
+
+
+permissions:
+  athenarank.admin:
+    description: Admin functions
+
+
+commands:
+  athenarank:
+    usage: /athenarank <subcommand>
+    description: Admin commands
+    permission: athenagm.admin
+    permission-message: You don't have permission to do that.
+  rankings:
+    usage: /rankings
+    description: Display the top 10 players

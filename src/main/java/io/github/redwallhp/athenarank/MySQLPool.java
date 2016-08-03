@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 
 public class MySQLPool {
@@ -26,12 +27,12 @@ public class MySQLPool {
     }
 
 
-    public Connection getConnection() {
+    public Connection getConnection() throws SQLException {
         try {
             return dataSource.getConnection();
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             AthenaRank.instance.getLogger().warning("MySQL connection error: " + ex.getMessage());
-            return null;
+            throw ex;
         }
     }
 

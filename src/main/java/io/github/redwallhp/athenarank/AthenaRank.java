@@ -1,5 +1,6 @@
 package io.github.redwallhp.athenarank;
 
+import io.github.redwallhp.athenarank.leaderboard.Leaderboard;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -12,6 +13,7 @@ public class AthenaRank extends JavaPlugin {
 
     public static AthenaRank instance;
     private MySQLPool pool;
+    private Leaderboard leaderboard;
 
 
     @Override
@@ -21,6 +23,8 @@ public class AthenaRank extends JavaPlugin {
         pool = new MySQLPool(getConfig());
         createTables();
         new RankEventListener();
+        leaderboard = new Leaderboard();
+        new CommandHandler();
     }
 
 
@@ -32,7 +36,7 @@ public class AthenaRank extends JavaPlugin {
     }
 
 
-    public Connection getSQLConnection() {
+    public Connection getSQLConnection() throws SQLException {
         return pool.getConnection();
     }
 
@@ -56,6 +60,11 @@ public class AthenaRank extends JavaPlugin {
         } catch (SQLException ex) {
             getLogger().warning("Error creating database tables: " + ex.getMessage());
         }
+    }
+
+
+    public Leaderboard getLeaderboard() {
+        return leaderboard;
     }
 
 
