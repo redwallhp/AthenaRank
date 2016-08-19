@@ -62,11 +62,7 @@ public class CommandHandler implements CommandExecutor {
         ChatColor color;
         sender.sendMessage(ChatColor.DARK_AQUA + "--- Top 10 Ranked Players ---");
         for (LeaderboardEntry e : plugin.getLeaderboard().getTopEntries()) {
-            try {
-                kdr = e.getKills() / e.getDeaths();
-            } catch (ArithmeticException ex) {
-                kdr = e.getKills();
-            }
+            kdr = plugin.getLeaderboard().calculateKDR(e);
             who = String.format("%d. %s", i, e.getName());
             stats = String.format("[Kills: %d Caps: %d, Deaths: %d, KDR: %.2f]", e.getKills(), e.getCaptures(), e.getDeaths(), kdr);
             if (i % 2 == 0) {

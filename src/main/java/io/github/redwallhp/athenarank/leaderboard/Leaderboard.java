@@ -174,12 +174,14 @@ public class Leaderboard {
     }
 
 
-    private float calculateKDR(LeaderboardEntry entry) {
-        float kdr;
-        try {
-            kdr = entry.getKills() / entry.getDeaths();
-        } catch (ArithmeticException ex) {
-            kdr = entry.getKills();
+    public float calculateKDR(LeaderboardEntry entry) {
+        Float kdr;
+        kdr = (float) entry.getKills() / entry.getDeaths();
+        if (kdr.isInfinite()) {
+            return (float) entry.getKills(); // x/0 == infinity in float division
+        }
+        if (kdr.isNaN()) {
+            return 0f; // 0/0 == NaN instead of ArithmeticException in float division
         }
         return kdr;
     }
