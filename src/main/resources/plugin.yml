@@ -15,7 +15,7 @@ commands:
   athenarank:
     usage: /athenarank <subcommand>
     description: Admin commands
-    permission: athenagm.admin
+    permission: athenarank.admin
     permission-message: You don't have permission to do that.
   rankings:
     usage: /rankings
