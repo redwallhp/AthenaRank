@@ -9,8 +9,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
+import java.util.UUID;
 
 
 public class CommandHandler implements CommandExecutor {
@@ -25,6 +28,7 @@ public class CommandHandler implements CommandExecutor {
         resetConfirmation = new HashMap<String, String>();
         plugin.getCommand("athenarank").setExecutor(this);
         plugin.getCommand("rankings").setExecutor(this);
+        plugin.getCommand("mystats").setExecutor(this);
     }
 
 
@@ -48,6 +52,11 @@ public class CommandHandler implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("rankings")) {
             rankingsCommand(sender);
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("mystats")) {
+            myStatsCommand(sender);
             return true;
         }
 
@@ -88,6 +97,43 @@ public class CommandHandler implements CommandExecutor {
             sender.sendMessage(ChatColor.GRAY + stats);
             i++;
         }
+    }
+
+
+    /**
+     * Display the user's personal stats
+     */
+    private void myStatsCommand(final CommandSender sender) {
+        new BukkitRunnable() {
+            public void run() {
+                try {
+                    Connection conn = plugin.getSQLConnection();
+                    String sql = String.format("SELECT * FROM rankings WHERE name='%s';", sender.getName());
+                    Statement stmt = conn.createStatement();
+                    ResultSet res = stmt.executeQuery(sql);
+                    if (res.next()) {
+                        UUID uuid = UUID.fromString(res.getString("uuid"));
+                        String name = res.getString("name");
+                        final int kills = res.getInt("kills");
+                        final int caps = res.getInt("captures");
+                        final int deaths = res.getInt("deaths");
+                        final float kdr = plugin.getLeaderboard().calculateKDR(kills, deaths);
+                        final int dist = res.getInt("distance");
+                        new BukkitRunnable() {
+                            public void run() {
+                                String basic = String.format("[Kills: %d Caps: %d, Deaths: %d, KDR: %.2f]", kills, caps, deaths, kdr);
+                                sender.sendMessage(ChatColor.GOLD + basic);
+                                sender.sendMessage(String.format("%sLongest distance kill: %dm", ChatColor.YELLOW, dist));
+                            }
+                        }.runTask(plugin);
+                    }
+                    conn.close();
+                } catch (SQLException ex) {
+                    sender.sendMessage(ChatColor.RED + "There was an error fetching your stats.");
+                    plugin.getLogger().warning("Error fetching player stats: " + ex.getMessage());
+                }
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
 

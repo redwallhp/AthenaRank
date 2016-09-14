@@ -1,7 +1,6 @@
 package io.github.redwallhp.athenarank;
 
 import io.github.redwallhp.athenagm.events.AthenaDeathEvent;
-import io.github.redwallhp.athenagm.events.PlayerMurderPlayerEvent;
 import io.github.redwallhp.athenagm.events.PlayerScorePointEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

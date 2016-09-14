@@ -175,10 +175,15 @@ public class Leaderboard {
 
 
     public float calculateKDR(LeaderboardEntry entry) {
+        return calculateKDR(entry.getKills(), entry.getDeaths());
+    }
+
+
+    public float calculateKDR(int kills, int deaths) {
         Float kdr;
-        kdr = (float) entry.getKills() / entry.getDeaths();
+        kdr = (float) kills / deaths;
         if (kdr.isInfinite()) {
-            return (float) entry.getKills(); // x/0 == infinity in float division
+            return (float) kills; // x/0 == infinity in float division
         }
         if (kdr.isNaN()) {
             return 0f; // 0/0 == NaN instead of ArithmeticException in float division

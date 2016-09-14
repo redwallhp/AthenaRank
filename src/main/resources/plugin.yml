@@ -20,3 +20,6 @@ commands:
   rankings:
     usage: /rankings
     description: Display the top 10 players
+  mystats:
+    usage: /mystats
+    description: Display your personal stats
