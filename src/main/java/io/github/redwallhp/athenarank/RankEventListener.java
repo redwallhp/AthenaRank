@@ -1,5 +1,6 @@
 package io.github.redwallhp.athenarank;
 
+import io.github.redwallhp.athenagm.events.AthenaDeathEvent;
 import io.github.redwallhp.athenagm.events.PlayerMurderPlayerEvent;
 import io.github.redwallhp.athenagm.events.PlayerScorePointEvent;
 import org.bukkit.event.EventHandler;
@@ -53,18 +54,20 @@ public class RankEventListener implements Listener {
      * Update the killer and victim's scores after a PvP encounter
      */
     @EventHandler
-    public void onPlayerMurderEvent(final PlayerMurderPlayerEvent event) {
+    public void onAthenaDeathEvent(final AthenaDeathEvent event) {
+        if (!event.isPvP()) return;
         new BukkitRunnable() {
             public void run() {
                 try {
                     Connection conn = plugin.getSQLConnection();
                     conn.setAutoCommit(false);
-                    String killerSQL = "UPDATE `rankings` SET kills=kills+1 WHERE uuid=?;";
+                    String killerSQL = "UPDATE `rankings` SET kills=kills+1, distance=GREATEST(distance,?) WHERE uuid=?;";
                     String victimSQL = "UPDATE `rankings` SET deaths=deaths+1 WHERE uuid=?;";
                     PreparedStatement updateKiller = conn.prepareStatement(killerSQL);
                     PreparedStatement updateVictim = conn.prepareStatement(victimSQL);
-                    updateKiller.setString(1, event.getKiller().getUniqueId().toString());
-                    updateVictim.setString(1, event.getVictim().getUniqueId().toString());
+                    updateKiller.setInt(1, event.getDamageEvent().getDistance());
+                    updateKiller.setString(2, event.getKiller().getUniqueId().toString());
+                    updateVictim.setString(1, event.getPlayer().getUniqueId().toString());
                     updateKiller.executeUpdate();
                     updateVictim.executeUpdate();
                     conn.commit();

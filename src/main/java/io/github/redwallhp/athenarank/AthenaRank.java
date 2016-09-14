@@ -63,6 +63,7 @@ public class AthenaRank extends JavaPlugin {
                     "`kills` INTEGER NOT NULL DEFAULT '0'," +
                     "`captures` INTEGER NOT NULL DEFAULT '0'," +
                     "`deaths` INTEGER NOT NULL DEFAULT '0'," +
+                    "`distance` INTEGER NOT NULL DEFAULT '0'," +
                     "PRIMARY KEY (`uuid`)" +
                     ");";
             stmt.executeUpdate(sql);
